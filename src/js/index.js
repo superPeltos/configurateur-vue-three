@@ -171,7 +171,7 @@ function doMouseDown(event) {
     dragging = true;
     mouse.set((event.clientX / window.innerWidth) * 2 - 1, -(event.clientY / window.innerHeight) * 2 + 1);
     raycaster.setFromCamera(mouse, camera);
-    intersects = raycaster.intersectObjects(scene.children);
+    intersects = raycaster.intersectObjects(cubes);
     if (intersects.length === 0 ) return;
     objectDragg = intersects[0];
   } else if (mouseAction === ADD) {
