@@ -1,11 +1,23 @@
 import * as THREE from 'three';
 const OrbitControls = require('three-orbitcontrols');
 
+const CAMERA = 1, DRAG = 2;
+
 var camera, controls, scene, renderer;
+var mouseAction;
+
+
 init();
 //render(); // remove when using next line for animation loop (requestAnimationFrame)
 animate();
 function init() {
+  mouseAction = CAMERA;
+  document.getElementById("mouseCamera").onchange = doChangeMouseAction;
+  document.getElementById("mouseDrag").onchange = doChangeMouseAction;
+//  setUpMouseHander(canvas,doMouseDown,doMouseMove);
+//  setUpTouchHander(canvas,doMouseDown,doMouseMove);
+
+
   scene = new THREE.Scene();
   scene.background = new THREE.Color( 0xcccccc );
 
@@ -31,9 +43,6 @@ var at = new THREE.Vector3();
   controls.minAzimuthAngle =  0 * Math.PI / 21 ;
   controls.maxAzimuthAngle = Math.PI;
 
-
-
-
   // world
   var geometry = new THREE.PlaneGeometry( window.innerWidth, window.innerHeight, 1 );
   var material = new THREE.MeshBasicMaterial( {color: 0x000, side: THREE.DoubleSide} );
@@ -47,8 +56,6 @@ var at = new THREE.Vector3();
   scene.add( plane );
    geometry = new THREE.BoxGeometry( 25,25,25 );
    material = new THREE.MeshPhongMaterial( { color: 0xffffff, flatShading: true } );
-
-
 
     var mesh = new THREE.Mesh( geometry, material );
     console.log();
@@ -68,11 +75,8 @@ var at = new THREE.Vector3();
   scene.add( light );
   var light = new THREE.AmbientLight( 0x222222 );
   scene.add( light );
-  //
   scene.add( camera );
   window.addEventListener( 'resize', onWindowResize, false );
-
-
 
 }
 function onWindowResize() {
@@ -82,9 +86,23 @@ function onWindowResize() {
 }
 function animate() {
   requestAnimationFrame( animate );
-  controls.update(); // only required if controls.enableDamping = true, or if controls.autoRotate = true
+  if(mouseAction!==CAMERA) {
+    controls.enabled = false;
+  }
+  else {
+    controls.enabled = true;
+  }
   render();
 }
 function render() {
   renderer.render( scene, camera );
+}
+
+function doChangeMouseAction() {
+  if (document.getElementById("mouseCamera").checked) {
+    mouseAction = CAMERA;
+  }
+  else if (document.getElementById("mouseDrag").checked) {
+    mouseAction = DRAG;
+  }
 }
