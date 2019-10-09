@@ -10,8 +10,6 @@ let mouse = new THREE.Vector2();
 let mesh;
 let normalMatrix = new THREE.Matrix3();
 let worldNormal = new THREE.Vector3();
-let lookAtVector = new THREE.Vector3();
-
 
 let camera, controls, scene, renderer;
 let mouseAction;
@@ -64,7 +62,6 @@ function init() {
   floor.position.z = 0;
   floor.rotation.x = Math.PI / 2;
   scene.add(floor);
-
 
   let walls = [
     {
@@ -152,6 +149,7 @@ function animate() {
   else {
     controls.enabled = true;
   }
+  controls.update();
   render();
 }
 function render() {
@@ -168,25 +166,8 @@ function doChangeMouseAction() {
 }
 
 
-function doMouseDown(x,y){
+function doMouseDown(){
   dragging = true;
-//
-//  if(mouseAction!==CAMERA) {
-//    var a = 2*x/renderer.domElement.width - 1;
-//    var b = 1 - 2*y/renderer.domElement.height;
-//    raycaster.setFromCamera( new THREE.Vector2(a,b), camera );
-//    intersects = raycaster.intersectObjects( scene.children );  // no need for recusion since all objects are top-level
-//    if (intersects.length === 0) {
-//      return false;
-//    }
-//
-//    var item = intersects[0];
-//    dragItem = intersects[0].object;
-//    scene.add(targetForDragging);
-//    targetForDragging.position.set(0,item.point.y,0);
-//    render();
-//    return true;
-//  }
 }
 
 function doMouseMove(event) {
