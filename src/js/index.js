@@ -3,9 +3,22 @@ const OrbitControls = require('three-orbitcontrols');
 
 const CAMERA = 1, DRAG = 2;
 
-let camera, controls, scene, renderer;
-var mouseAction;
+let roomWidth = 500;
+let roomHeight = 500;
 
+let mouse = new THREE.Vector2();
+let mesh;
+let normalMatrix = new THREE.Matrix3();
+let worldNormal = new THREE.Vector3();
+let lookAtVector = new THREE.Vector3();
+
+
+let camera, controls, scene, renderer;
+let mouseAction;
+let dragging = false;
+let raycaster;
+let intersects;
+let targetForDragging;
 
 init();
 //render(); // remove when using next line for animation loop (requestAnimationFrame)
@@ -25,6 +38,7 @@ function init() {
 
   renderer.domElement.addEventListener("mousedown", doMouseDown);
   renderer.domElement.addEventListener("mousemove", doMouseMove);
+  renderer.domElement.addEventListener("mouseup", doMouseUp);
 
   camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 1, 2000);
   camera.position.set(1000, 200, 0);
@@ -42,7 +56,7 @@ function init() {
   controls.maxAzimuthAngle = Math.PI;
 
   // World
-  let geometry = new THREE.PlaneGeometry(500, 500, 1);
+  let geometry = new THREE.PlaneGeometry(roomWidth, roomHeight, 1);
   let material = new THREE.MeshBasicMaterial({color: 0x000, side: THREE.DoubleSide});
   let floor = new THREE.Mesh(geometry, material);
   floor.position.x = 0;
@@ -98,12 +112,10 @@ function init() {
   // Object
   geometry = new THREE.BoxGeometry(25, 25, 25);
   material = new THREE.MeshPhongMaterial({color: 0xffffff, flatShading: true});
-  let mesh = new THREE.Mesh(geometry, material);
+  mesh = new THREE.Mesh(geometry, material);
   mesh.position.x = 0;
   mesh.position.y = mesh.geometry.parameters.height / 2;
   mesh.position.z = 0;
-  mesh.updateMatrix();
-  mesh.matrixAutoUpdate = false;
 
   scene.add(mesh);
 
@@ -119,6 +131,13 @@ function init() {
   //
   window.addEventListener('resize', onWindowResize, false);
 
+  targetForDragging = new THREE.Mesh(
+    new THREE.BoxGeometry(100,0.01,100),
+    new THREE.MeshBasicMaterial()
+  );
+  targetForDragging.material.visible = false;
+
+  raycaster = new THREE.Raycaster();
 }
 function onWindowResize() {
   camera.aspect = window.innerWidth / window.innerHeight;
@@ -149,16 +168,52 @@ function doChangeMouseAction() {
 }
 
 
-function doMouseDown(){
-  if(mouseAction===CAMERA) {
-    return true;
-  }
-  console.log("MOUSE DOWN");
+function doMouseDown(x,y){
+  dragging = true;
+//
+//  if(mouseAction!==CAMERA) {
+//    var a = 2*x/renderer.domElement.width - 1;
+//    var b = 1 - 2*y/renderer.domElement.height;
+//    raycaster.setFromCamera( new THREE.Vector2(a,b), camera );
+//    intersects = raycaster.intersectObjects( scene.children );  // no need for recusion since all objects are top-level
+//    if (intersects.length === 0) {
+//      return false;
+//    }
+//
+//    var item = intersects[0];
+//    dragItem = intersects[0].object;
+//    scene.add(targetForDragging);
+//    targetForDragging.position.set(0,item.point.y,0);
+//    render();
+//    return true;
+//  }
 }
 
-function doMouseMove() {
+function doMouseMove(event) {
   if(mouseAction===CAMERA) {
     return true;
   }
-  console.log("MOUSE MOVE");
+  else {
+    if(dragging){
+      mouse.set((event.clientX / window.innerWidth) * 2 - 1, -(event.clientY / window.innerHeight) * 2 + 1);
+      raycaster.setFromCamera(mouse, camera);
+      intersects = raycaster.intersectObjects(scene.children);
+      if (intersects.length === 0 || !dragging) return;
+
+      console.log(intersects);
+
+      normalMatrix.getNormalMatrix(intersects[0].object.matrixWorld);
+      worldNormal.copy(intersects[0].face.normal).applyMatrix3(normalMatrix).normalize();
+      let newPos = intersects[0].point;
+
+      let a = Math.min(roomWidth/2-mesh.geometry.parameters.width/2,Math.max(-roomWidth/2+mesh.geometry.parameters.width/2,newPos.x));  // clamp coords to the range -19 to 19, so object stays on ground
+      let b = Math.min(roomWidth/2-mesh.geometry.parameters.width/2,Math.max(-roomWidth/2+mesh.geometry.parameters.width/2,newPos.z));
+      mesh.position.set(a,mesh.position.y,b);
+
+      render();
+    }
+  }
+}
+function doMouseUp() {
+  dragging = false;
 }
