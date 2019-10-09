@@ -7,7 +7,6 @@ let roomWidth = 500;
 let roomHeight = 500;
 
 let mouse = new THREE.Vector2();
-let mesh;
 let normalMatrix = new THREE.Matrix3();
 let worldNormal = new THREE.Vector3();
 let objectDragg;
@@ -170,11 +169,11 @@ function doChangeMouseAction() {
 function doMouseDown(event) {
   if (mouseAction === DRAG) {
     dragging = true;
-    /*mouse.set((event.clientX / window.innerWidth) * 2 - 1, -(event.clientY / window.innerHeight) * 2 + 1);
+    mouse.set((event.clientX / window.innerWidth) * 2 - 1, -(event.clientY / window.innerHeight) * 2 + 1);
     raycaster.setFromCamera(mouse, camera);
     intersects = raycaster.intersectObjects(scene.children);
     if (intersects.length === 0 ) return;
-    objectDragg = intersects[0].object;*/
+    objectDragg = intersects[0];
   } else if (mouseAction === ADD) {
     console.log('coucou');
     mouse.set((event.clientX / window.innerWidth) * 2 - 1, -(event.clientY / window.innerHeight) * 2 + 1);
@@ -191,27 +190,7 @@ function doMouseDown(event) {
       scene.add(cube);
     });
 
-//    let a = Math.min(roomWidth / 2 - mesh.geometry.parameters.width / 2, Math.max(-roomWidth / 2 + mesh.geometry.parameters.width / 2, newPos.x));  // clamp coords to the range -19 to 19, so object stays on ground
-//    let b = Math.min(roomWidth / 2 - mesh.geometry.parameters.width / 2, Math.max(-roomWidth / 2 + mesh.geometry.parameters.width / 2, newPos.z));
-//    mesh.position.set(a, mesh.position.y, b);
   }
-//
-//  if(mouseAction!==CAMERA) {
-//    var a = 2*x/renderer.domElement.width - 1;
-//    var b = 1 - 2*y/renderer.domElement.height;
-//    raycaster.setFromCamera( new THREE.Vector2(a,b), camera );
-//    intersects = raycaster.intersectObjects( scene.children );  // no need for recusion since all objects are top-level
-//    if (intersects.length === 0) {
-//      return false;
-//    }
-//
-//    var item = intersects[0];
-//    dragItem = intersects[0].object;
-//    scene.add(targetForDragging);
-//    targetForDragging.position.set(0,item.point.y,0);
-//    render();
-//    return true;
-//  }
 }
 
 function doMouseMove(event) {
@@ -224,19 +203,14 @@ function doMouseMove(event) {
       raycaster.setFromCamera(mouse, camera);
       intersects = raycaster.intersectObjects(scene.children);
       if (intersects.length === 0 || !dragging) return;
-
-      console.log(intersects);
-
-      normalMatrix.getNormalMatrix(intersects[0].object.matrixWorld);
-      worldNormal.copy(intersects[0].face.normal).applyMatrix3(normalMatrix).normalize();
+      normalMatrix.getNormalMatrix(objectDragg.object.matrixWorld);
+      worldNormal.copy(objectDragg.face.normal).applyMatrix3(normalMatrix).normalize();
       let newPos = intersects[0].point;
 
-      let a = Math.min(roomWidth / 2 - mesh.geometry.parameters.width / 2, Math.max(-roomWidth / 2 + mesh.geometry.parameters.width / 2, newPos.x));  // clamp coords to the range -19 to 19, so object stays on ground
-      let b = Math.min(roomWidth / 2 - mesh.geometry.parameters.width / 2, Math.max(-roomWidth / 2 + mesh.geometry.parameters.width / 2, newPos.z));
-      objectDragg = intersects[0].object;
-      objectDragg.position.set(a, mesh.position.y, b);
+      let a = Math.min(roomWidth / 2 - objectDragg.object.geometry.parameters.width / 2, Math.max(-roomWidth / 2 + objectDragg.object.geometry.parameters.width / 2, newPos.x));  // clamp coords to the range -19 to 19, so object stays on ground
+      let b = Math.min(roomWidth / 2 - objectDragg.object.geometry.parameters.width / 2, Math.max(-roomWidth / 2 + objectDragg.object.geometry.parameters.width / 2, newPos.z));
 
-
+      objectDragg.object.position.set(a, objectDragg.object.position.y, b);
     }
   }
 }
@@ -247,7 +221,7 @@ function doMouseUp() {
 function generateMesh(x,z){
   let geometry = new THREE.BoxGeometry(25, 25, 25);
   let material = new THREE.MeshPhongMaterial({color: 0xffffff, flatShading: true});
-  mesh = new THREE.Mesh(geometry, material);
+  let mesh = new THREE.Mesh(geometry, material);
   mesh.position.x = 0;
   mesh.position.y = mesh.geometry.parameters.height / 2;
   mesh.position.z = 0;
