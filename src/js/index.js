@@ -1,5 +1,4 @@
 import * as THREE from 'three';
-
 const OrbitControls = require('three-orbitcontrols');
 
 const CAMERA = 1, DRAG = 2, ADD = 3;
@@ -11,7 +10,6 @@ let mouse = new THREE.Vector2();
 let mesh;
 let normalMatrix = new THREE.Matrix3();
 let worldNormal = new THREE.Vector3();
-let lookAtVector = new THREE.Vector3();
 let objectDragg;
 
 let camera, controls, scene, renderer;
@@ -25,7 +23,6 @@ let cubes = [];
 init();
 //render(); // remove when using next line for animation loop (requestAnimationFrame)
 animate();
-
 function init() {
   mouseAction = CAMERA;
   document.getElementById("mouseCamera").onchange = doChangeMouseAction;
@@ -45,7 +42,7 @@ function init() {
   renderer.domElement.addEventListener("mouseup", doMouseUp);
 
   camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 1, 2000);
-  camera.position.set(1000, 200, 0);
+  camera.position.set(500, roomWidth*6/7, 0);
 
   // controls
   controls = new OrbitControls(camera, renderer.domElement);
@@ -53,11 +50,11 @@ function init() {
   controls.enableDamping = true; // an animation loop is required when either damping or auto-rotation are enabled
   controls.dampingFactor = 0.05;
   controls.screenSpacePanning = false;
-  controls.minDistance = 100;
-  controls.maxDistance = 250;
-  controls.maxPolarAngle = 10 * Math.PI / 21;
-  controls.minAzimuthAngle = 0 * Math.PI / 21;
-  controls.maxAzimuthAngle = Math.PI;
+  controls.minDistance = 0;
+  controls.maxDistance = roomWidth*2/3;
+  controls.maxPolarAngle = 8 * Math.PI / 21;
+  controls.minAzimuthAngle = Math.PI/4;
+  controls.maxAzimuthAngle = Math.PI-Math.PI/4;
 
   // World
   let geometry = new THREE.PlaneGeometry(roomWidth, roomHeight, 1);
@@ -132,22 +129,18 @@ function init() {
   window.addEventListener('resize', onWindowResize, false);
 
   targetForDragging = new THREE.Mesh(
-    new THREE.BoxGeometry(100, 0.01, 100),
+    new THREE.BoxGeometry(100,0.01,100),
     new THREE.MeshBasicMaterial()
   );
   targetForDragging.material.visible = false;
 
   raycaster = new THREE.Raycaster();
 }
-
-
-
 function onWindowResize() {
   camera.aspect = window.innerWidth / window.innerHeight;
   camera.updateProjectionMatrix();
-  renderer.setSize(window.innerWidth, window.innerHeight);
+  renderer.setSize( window.innerWidth, window.innerHeight );
 }
-
 function animate() {
   requestAnimationFrame(animate);
   if (mouseAction !== CAMERA) {
@@ -155,18 +148,18 @@ function animate() {
   } else {
     controls.enabled = true;
   }
+  controls.update();
   render();
 }
-
 function render() {
-  renderer.render(scene, camera);
+  renderer.render( scene, camera );
 }
 
 function doChangeMouseAction() {
-
   if (document.getElementById("mouseCamera").checked) {
     mouseAction = CAMERA;
-  } else if (document.getElementById("mouseDrag").checked) {
+  }
+  else if (document.getElementById("mouseDrag").checked) {
     mouseAction = DRAG;
   } else if (document.getElementById("mouseAdd").checked) {
     mouseAction = ADD;
@@ -224,12 +217,15 @@ function doMouseDown(event) {
 function doMouseMove(event) {
   if (mouseAction === CAMERA || mouseAction === ADD) {
     return true;
-  } else {
-    if (dragging) {
+  }
+  else {
+    if(dragging){
       mouse.set((event.clientX / window.innerWidth) * 2 - 1, -(event.clientY / window.innerHeight) * 2 + 1);
       raycaster.setFromCamera(mouse, camera);
       intersects = raycaster.intersectObjects(scene.children);
       if (intersects.length === 0 || !dragging) return;
+
+      console.log(intersects);
 
       normalMatrix.getNormalMatrix(intersects[0].object.matrixWorld);
       worldNormal.copy(intersects[0].face.normal).applyMatrix3(normalMatrix).normalize();
@@ -244,7 +240,6 @@ function doMouseMove(event) {
     }
   }
 }
-
 function doMouseUp() {
   dragging = false;
 }
