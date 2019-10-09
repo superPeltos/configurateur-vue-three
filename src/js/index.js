@@ -41,49 +41,48 @@ function init() {
   scene.add(floor);
 
 
+  let walls = [
+    {
+      name: 'wallB',
+      color: 0xcfdce8,
+      position: {
+        x: -floor.geometry.parameters.width / 2,
+        y: 0,
+        z: 0,
+      },
+      rotation: {
+        y: Math.PI / 2,
+      }
+    }, {
+      name: 'wallR',
+      color: 0xf0f8ff,
+      position: {
+        x: 0,
+        y: 0,
+        z: floor.geometry.parameters.width / 2,
+      }
+    }, {
+      name: 'wallL',
+      color: 0xf0f8ff,
+      position: {
+        x: 0,
+        y: 0,
+        z: -floor.geometry.parameters.width / 2,
+      },
+    }
+  ];
 
-//  let walls = [
-//    {
-//      name: 'wallB',
-//      color: '0xcfdce8',
-//      position: {
-//        x: 0,
-//        y: 0,
-//        z: Math.PI / 2,
-//      }
-//    }, {
-//      name: 'wallL',
-//      color: '0xf0f8ff',
-//      position: {
-//        x: 0,
-//        y: 0,
-//        z: Math.PI / 2,
-//      }
-//    }
-//  ];
-  material = new THREE.MeshBasicMaterial({color: 0xf0f8ff, side: THREE.DoubleSide});
-  let wallR = new THREE.Mesh(geometry, material);
-  wallR.position.x = 0;
-  wallR.position.y = 0;
-  wallR.position.z = floor.geometry.parameters.width / 2;
-
-  scene.add(wallR);
-
-  material = new THREE.MeshBasicMaterial({color: 0xcfdce8, side: THREE.DoubleSide});
-  let wallB = new THREE.Mesh(geometry, material);
-  wallB.position.x = -floor.geometry.parameters.width / 2;
-  wallB.position.y = 0;
-  wallB.position.z = 0;
-  wallB.rotation.y = Math.PI / 2;
-
-  scene.add(wallB);
-//
-  material = new THREE.MeshBasicMaterial({color: 0xf0f8ff, side: THREE.DoubleSide});
-  let wallL = new THREE.Mesh(geometry, material);
-  wallL.position.x = 0;
-  wallL.position.y = 0;
-  wallL.position.z = -floor.geometry.parameters.width / 2;
-  scene.add(wallL);
+  walls.map((wall) => {
+    material = new THREE.MeshBasicMaterial({color: wall.color, side: THREE.DoubleSide});
+    let w = new THREE.Mesh(geometry, material);
+    w.position.x = wall.position.x;
+    w.position.y = wall.position.y;
+    w.position.z = wall.position.z;
+    if(wall.hasOwnProperty('rotation')){
+      w.rotation.y = wall.rotation.y
+    }
+    scene.add(w);
+  });
 
   // Object
   geometry = new THREE.BoxGeometry(25, 25, 25);
