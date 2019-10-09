@@ -39,7 +39,7 @@ function init() {
   renderer.domElement.addEventListener("mouseup", doMouseUp);
 
   camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 1, 2000);
-  camera.position.set(1000, 200, 0);
+  camera.position.set(500, roomWidth*6/7, 0);
 
   // controls
   controls = new OrbitControls(camera, renderer.domElement);
@@ -47,11 +47,11 @@ function init() {
   controls.enableDamping = true; // an animation loop is required when either damping or auto-rotation are enabled
   controls.dampingFactor = 0.05;
   controls.screenSpacePanning = false;
-  controls.minDistance = 100;
-  controls.maxDistance = 250;
-  controls.maxPolarAngle = 10 * Math.PI / 21;
-  controls.minAzimuthAngle = 0 * Math.PI / 21;
-  controls.maxAzimuthAngle = Math.PI;
+  controls.minDistance = 0;
+  controls.maxDistance = roomWidth*2/3;
+  controls.maxPolarAngle = 8 * Math.PI / 21;
+  controls.minAzimuthAngle = Math.PI/4;
+  controls.maxAzimuthAngle = Math.PI-Math.PI/4;
 
   // World
   let geometry = new THREE.PlaneGeometry(roomWidth, roomHeight, 1);
