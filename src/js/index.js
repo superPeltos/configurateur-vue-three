@@ -1,4 +1,5 @@
 import * as THREE from 'three';
+import {setUpMouseHander,setUpTouchHander} from "./windowMouseRequestAnimation";
 const OrbitControls = require('three-orbitcontrols');
 
 const CAMERA = 1, DRAG = 2;
@@ -14,9 +15,6 @@ function init() {
   mouseAction = CAMERA;
   document.getElementById("mouseCamera").onchange = doChangeMouseAction;
   document.getElementById("mouseDrag").onchange = doChangeMouseAction;
-//  setUpMouseHander(canvas,doMouseDown,doMouseMove);
-//  setUpTouchHander(canvas,doMouseDown,doMouseMove);
-
 
   scene = new THREE.Scene();
   scene.background = new THREE.Color(0xffffff);
@@ -25,6 +23,10 @@ function init() {
   renderer.setPixelRatio(window.devicePixelRatio);
   renderer.setSize(window.innerWidth, window.innerHeight);
   document.body.appendChild(renderer.domElement);
+
+  setUpMouseHander(renderer.domElement,doMouseDown,doMouseMove);
+  setUpTouchHander(renderer.domElement,doMouseDown,doMouseMove);
+
   camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 1, 2000);
   camera.position.set(1000, 200, 0);
 
@@ -145,4 +147,13 @@ function doChangeMouseAction() {
   else if (document.getElementById("mouseDrag").checked) {
     mouseAction = DRAG;
   }
+}
+
+
+function doMouseDown(){
+  console.log("MOUSE DOWN");
+}
+
+function doMouseMove() {
+  console.log("MOUSE MOVE");
 }
