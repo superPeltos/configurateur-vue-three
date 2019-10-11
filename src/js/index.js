@@ -8,6 +8,11 @@ const CAMERA = 1, DRAG = 2, ADD = 3;
 
 let roomWidth = 500;
 let roomHeight = 500;
+let roomDepth = 500;
+let realRoomHeight = 5000;
+let realRoomWidth = 5000;
+let realRoomDepth = 5000;
+
 
 let mouse = new THREE.Vector2();
 let normalMatrix = new THREE.Matrix3();
@@ -44,7 +49,7 @@ function init() {
   renderer.domElement.addEventListener("mouseup", doMouseUp);
 
   camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 1, 2000);
-  camera.position.set(500, roomWidth*6/7, 0);
+  camera.position.set(roomWidth, roomWidth*6/7, 0);
 
   // controls
   controls = new OrbitControls(camera, renderer.domElement);
@@ -52,11 +57,11 @@ function init() {
   controls.enableDamping = true; // an animation loop is required when either damping or auto-rotation are enabled
   controls.dampingFactor = 0.05;
   controls.screenSpacePanning = false;
-  controls.minDistance = 0;
+  /*controls.minDistance = 0;
   controls.maxDistance = roomWidth*2/3;
   controls.maxPolarAngle = 8 * Math.PI / 21;
   controls.minAzimuthAngle = Math.PI/4;
-  controls.maxAzimuthAngle = Math.PI-Math.PI/4;
+  controls.maxAzimuthAngle = Math.PI-Math.PI/4;*/
 
   // World
   let geometry = new THREE.PlaneGeometry(roomWidth, roomHeight, 1);
@@ -178,7 +183,7 @@ function doMouseDown(event) {
     if (intersects.length === 0 ) return;
     objectDragg = intersects[0];
   } else if (mouseAction === ADD) {
-    console.log('coucou');
+    /*console.log('coucou');
     mouse.set((event.clientX / window.innerWidth) * 2 - 1, -(event.clientY / window.innerHeight) * 2 + 1);
     raycaster.setFromCamera(mouse, camera);
     intersects = raycaster.intersectObjects(scene.children);
@@ -192,7 +197,7 @@ function doMouseDown(event) {
     cubes.forEach((cube) => {
       scene.add(cube);
     });
-
+*/
   }
 }
 
@@ -227,14 +232,24 @@ function doMouseUp() {
 }
 
 function generateMesh(x,z){
-  let geometry = new THREE.BoxGeometry(50, 60, 50);
-  let loader = new THREE.TextureLoader();
-  loader.setPath("src/asset/");
-  var material = new THREE.MeshBasicMaterial( { map: loader.load( '8108036.png' ) } );
-//  let material = new THREE.MeshPhongMaterial({color: 0xffffff, flatShading: true});
-  let mesh = new THREE.Mesh(geometry, material);
-  mesh.position.x = 0;
-  mesh.position.y = mesh.geometry.parameters.height / 2;
-  mesh.position.z = 0;
-  cubes.push(mesh);
+  console.log(data.products);
+
+  data.products.forEach(function (element) {
+    let realHeight = element.dimension.height*roomHeight/realRoomHeight;
+    let realWidth = element.dimension.width*roomWidth/realRoomWidth;
+    let realDepth = element.dimension.depth*roomDepth/realRoomDepth;
+
+    let imageName = element.ref;
+    imageName = imageName.replace('.','')+'.png';
+
+    let geometry = new THREE.BoxGeometry(realDepth, realHeight, realWidth);
+    let loader = new THREE.TextureLoader();
+    loader.setPath("src/asset/");
+    var material = new THREE.MeshBasicMaterial( { transparent:true, map: loader.load( imageName ) } );
+    let mesh = new THREE.Mesh(geometry, material);
+    mesh.position.x = 0;
+    mesh.position.y = mesh.geometry.parameters.height / 2;
+    mesh.position.z = 0;
+    cubes.push(mesh);
+  });
 }

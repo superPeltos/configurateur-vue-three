@@ -17,8 +17,8 @@
       "name": "Armoire 24'' hauteur 1980mm",
       "category": 1,
       "dimension": {
-        "heigth": 1980,
-        "Width": 600,
+        "height": 1980,
+        "width": 600,
         "depth": 526
       },
       "image": {
@@ -33,8 +33,8 @@
       "name": "Armoire double 2 tiroirs",
       "category": 1,
       "dimension": {
-        "heigth": 1950,
-        "Width": 903,
+        "height": 1950,
+        "width": 903,
         "depth": 518
       },
       "image": {
@@ -49,8 +49,8 @@
       "name": "Armoire double à fond perforé",
       "category": 1,
       "dimension": {
-        "heigth": 1950,
-        "Width": 903,
+        "height": 1950,
+        "width": 903,
         "depth": 518
       },
       "image": {
@@ -65,8 +65,8 @@
       "name": "Armoire double hauteur 1980mm",
       "category": 1,
       "dimension": {
-        "heigth": 1980,
-        "Width": 1200,
+        "height": 1980,
+        "width": 1200,
         "depth": 526
       },
       "image": {
@@ -81,8 +81,8 @@
       "name": "Bloc de tir multifonction 26''",
       "category": 2,
       "dimension": {
-        "heigth": 954,
-        "Width": 676,
+        "height": 954,
+        "width": 676,
         "depth": 500
       },
       "image": {
@@ -97,8 +97,8 @@
       "name": "Bloc de tri multifonction 34''",
       "category": 2,
       "dimension": {
-        "heigth": 954,
-        "Width": 861,
+        "height": 954,
+        "width": 861,
         "depth": 500
       },
       "image": {
@@ -113,8 +113,8 @@
       "name": "Bloc poubelle 34''",
       "category": 2,
       "dimension": {
-        "heigth": 954,
-        "Width": 861,
+        "height": 954,
+        "width": 861,
         "depth": 500
       },
       "image": {
