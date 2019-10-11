@@ -60,7 +60,15 @@ function init() {
 
   // World
   let geometry = new THREE.PlaneGeometry(roomWidth, roomHeight, 1);
-  let material = new THREE.MeshBasicMaterial({color: 0x000, side: THREE.DoubleSide});
+  let loader = new THREE.TextureLoader().load('src/asset/ground.jpg');
+  loader.wrapS = THREE.RepeatWrapping;
+  loader.wrapT = THREE.RepeatWrapping;
+  loader.repeat.set(16, 16);
+
+  // loader.setPath("src/asset/");
+
+  var material = new THREE.MeshBasicMaterial({ map: loader, side: THREE.DoubleSide });
+  // let material = new THREE.MeshBasicMaterial({map: 0x000, side: THREE.DoubleSide});
   let floor = new THREE.Mesh(geometry, material);
   floor.position.x = 0;
   floor.position.y = 0;
