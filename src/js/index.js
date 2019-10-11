@@ -65,12 +65,12 @@ function init() {
 
   // World
   let geometry = new THREE.PlaneGeometry(roomWidth, roomDepth, 1);
-  let loader = new THREE.TextureLoader().load('src/asset/ground.jpg');
-  loader.wrapS = THREE.RepeatWrapping;
-  loader.wrapT = THREE.RepeatWrapping;
-  loader.repeat.set(3, 3);
+  let texture = new THREE.TextureLoader().load('src/asset/ground.jpg');
+  texture.wrapS = THREE.RepeatWrapping;
+  texture.wrapT = THREE.RepeatWrapping;
+  texture.repeat.set(3, 3);
 
-  var material = new THREE.MeshBasicMaterial({ map: loader, side: THREE.DoubleSide });
+  var material = new THREE.MeshBasicMaterial({ map: texture, side: THREE.DoubleSide });
   let floor = new THREE.Mesh(geometry, material);
   floor.position.x = 0;
   floor.position.y = 0;
@@ -83,7 +83,6 @@ function init() {
   let walls = [
     {
       name: 'wallR',
-      color: 0xcfdce8,
       position: {
         x: -floor.geometry.parameters.width / 2,
         y: geometry.parameters.height / 2,
@@ -95,34 +94,46 @@ function init() {
     },
     {
       name: 'wallB',
-      color: 0xf0f8ff,
       position: {
         x: 0,
         y: geometry.parameters.height / 2,
         z: floor.geometry.parameters.width / 2,
+      },
+      rotation: {
+        y: -Math.PI
       }
     },
     {
       name: 'wallL',
-      color: 0xcfdce8,
       position: {
         x: floor.geometry.parameters.width / 2,
         y: geometry.parameters.height / 2,
         z: 0,
       },
       rotation: {
-        y: Math.PI / 2,
+        y: -Math.PI / 2,
+      }
+    },
+    {
+      name: 'wallF',
+      position: {
+        x: 0,
+        y: geometry.parameters.height / 2,
+        z: -floor.geometry.parameters.width / 2,
+      },
+      rotation: {
+        y: 0
       }
     },
   ];
 
   walls.forEach((wall) => {
-    let loader = new THREE.TextureLoader().load('src/asset/wall.jpeg');
-    loader.wrapS = THREE.RepeatWrapping;
-    loader.wrapT = THREE.RepeatWrapping;
-    loader.repeat.set(16, 16);
+    let texture = new THREE.TextureLoader().load('src/asset/wall.jpeg');
+    texture.wrapS = THREE.RepeatWrapping;
+    texture.wrapT = THREE.RepeatWrapping;
+    texture.repeat.set(16, 16);
 
-    material = new THREE.MeshBasicMaterial({map: loader, side: THREE.DoubleSide});
+    material = new THREE.MeshBasicMaterial({map: texture});
     let w = new THREE.Mesh(geometry, material);
     w.position.x = wall.position.x;
     w.position.y = wall.position.y;
