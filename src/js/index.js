@@ -70,12 +70,12 @@ function init() {
   texture.wrapT = THREE.RepeatWrapping;
   texture.repeat.set(3, 3);
 
-  var material = new THREE.MeshBasicMaterial({ map: texture, side: THREE.DoubleSide });
+  var material = new THREE.MeshBasicMaterial({ map: texture });
   let floor = new THREE.Mesh(geometry, material);
   floor.position.x = 0;
   floor.position.y = 0;
   floor.position.z = 0;
-  floor.rotation.x = Math.PI / 2;
+  floor.rotation.x = -Math.PI / 2;
   scene.add(floor);
 
   geometry = new THREE.PlaneGeometry(roomWidth, roomHeight, 1);
