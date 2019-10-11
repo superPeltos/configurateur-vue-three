@@ -7,10 +7,10 @@ const OrbitControls = require('three-orbitcontrols');
 const CAMERA = 1, DRAG = 2, ADD = 3;
 
 let roomWidth = 500;
-let roomHeight = 500;
+let roomHeight = 250;
 let roomDepth = 500;
-let realRoomHeight = 5000;
 let realRoomWidth = 5000;
+let realRoomHeight = 2500;
 let realRoomDepth = 5000;
 
 
@@ -64,16 +64,13 @@ function init() {
   controls.maxAzimuthAngle = Math.PI-Math.PI/4;*/
 
   // World
-  let geometry = new THREE.PlaneGeometry(roomWidth, roomHeight, 1);
+  let geometry = new THREE.PlaneGeometry(roomWidth, roomDepth, 1);
   let loader = new THREE.TextureLoader().load('src/asset/ground.jpg');
   loader.wrapS = THREE.RepeatWrapping;
   loader.wrapT = THREE.RepeatWrapping;
   loader.repeat.set(3, 3);
 
-  // loader.setPath("src/asset/");
-
   var material = new THREE.MeshBasicMaterial({ map: loader, side: THREE.DoubleSide });
-  // let material = new THREE.MeshBasicMaterial({map: 0x000, side: THREE.DoubleSide});
   let floor = new THREE.Mesh(geometry, material);
   floor.position.x = 0;
   floor.position.y = 0;
@@ -81,14 +78,15 @@ function init() {
   floor.rotation.x = Math.PI / 2;
   scene.add(floor);
 
-
+  geometry = new THREE.PlaneGeometry(roomWidth, roomHeight, 1);
+  console.log(floor.geometry.parameters);
   let walls = [
     {
       name: 'wallB',
       color: 0xcfdce8,
       position: {
         x: -floor.geometry.parameters.width / 2,
-        y: 0,
+        y: geometry.parameters.height / 2,
         z: 0,
       },
       rotation: {
@@ -99,7 +97,7 @@ function init() {
       color: 0xf0f8ff,
       position: {
         x: 0,
-        y: 0,
+        y: geometry.parameters.height / 2,
         z: floor.geometry.parameters.width / 2,
       }
     }, {
@@ -107,7 +105,7 @@ function init() {
       color: 0xf0f8ff,
       position: {
         x: 0,
-        y: 0,
+        y: geometry.parameters.height / 2,
         z: -floor.geometry.parameters.width / 2,
       },
     }
