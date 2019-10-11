@@ -1,4 +1,7 @@
 import * as THREE from 'three';
+
+var data = require('../asset/data.json');
+
 const OrbitControls = require('three-orbitcontrols');
 
 const CAMERA = 1, DRAG = 2, ADD = 3;
@@ -124,7 +127,7 @@ function init() {
   scene.add(light);
   var light = new THREE.AmbientLight(0x222222);
   scene.add(light);
-  //
+
   window.addEventListener('resize', onWindowResize, false);
 
   targetForDragging = new THREE.Mesh(
@@ -224,8 +227,11 @@ function doMouseUp() {
 }
 
 function generateMesh(x,z){
-  let geometry = new THREE.BoxGeometry(25, 25, 25);
-  let material = new THREE.MeshPhongMaterial({color: 0xffffff, flatShading: true});
+  let geometry = new THREE.BoxGeometry(50, 60, 50);
+  let loader = new THREE.TextureLoader();
+  loader.setPath("src/asset/");
+  var material = new THREE.MeshBasicMaterial( { map: loader.load( '8108036.png' ) } );
+//  let material = new THREE.MeshPhongMaterial({color: 0xffffff, flatShading: true});
   let mesh = new THREE.Mesh(geometry, material);
   mesh.position.x = 0;
   mesh.position.y = mesh.geometry.parameters.height / 2;

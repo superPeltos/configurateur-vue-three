@@ -1,0 +1,128 @@
+{
+  "categories": [
+  	{
+  		"id": 1,
+  		"name": "Armoires hautes",
+  		"position": 1
+  	},
+  	{
+  		"id": 2,
+  		"name": "Bloc poubelle",
+  		"position": 2
+  	}
+  ],
+  "products": [
+    {
+      "ref": "810.8022",
+      "name": "Armoire 24'' hauteur 1980mm",
+      "category": 1,
+      "dimension": {
+        "heigth": 1980,
+        "Width": 600,
+        "depth": 526
+      },
+      "image": {
+        "dimension": {
+          "width": 108,
+          "height": 356
+        }
+      }
+    },
+    {
+      "ref": "810.8057",
+      "name": "Armoire double 2 tiroirs",
+      "category": 1,
+      "dimension": {
+        "heigth": 1950,
+        "Width": 903,
+        "depth": 518
+      },
+      "image": {
+        "dimension": {
+          "width": 162,
+          "height": 351
+        }
+      }
+    },
+    {
+      "ref": "810.8058",
+      "name": "Armoire double à fond perforé",
+      "category": 1,
+      "dimension": {
+        "heigth": 1950,
+        "Width": 903,
+        "depth": 518
+      },
+      "image": {
+        "dimension": {
+          "width": 162,
+          "height": 351
+        }
+      }
+    },
+    {
+      "ref": "810.8042",
+      "name": "Armoire double hauteur 1980mm",
+      "category": 1,
+      "dimension": {
+        "heigth": 1980,
+        "Width": 1200,
+        "depth": 526
+      },
+      "image": {
+        "dimension": {
+          "width": 215,
+          "height": 356
+        }
+      }
+    },
+    {
+      "ref": "810.8007",
+      "name": "Bloc de tir multifonction 26''",
+      "category": 2,
+      "dimension": {
+        "heigth": 954,
+        "Width": 676,
+        "depth": 500
+      },
+      "image": {
+        "dimension": {
+          "width": 122,
+          "height": 179
+        }
+      }
+    },
+    {
+      "ref": "810.8009",
+      "name": "Bloc de tri multifonction 34''",
+      "category": 2,
+      "dimension": {
+        "heigth": 954,
+        "Width": 861,
+        "depth": 500
+      },
+      "image": {
+        "dimension": {
+          "width": 155,
+          "height": 179
+        }
+      }
+    },
+    {
+      "ref": "810.8036",
+      "name": "Bloc poubelle 34''",
+      "category": 2,
+      "dimension": {
+        "heigth": 954,
+        "Width": 861,
+        "depth": 500
+      },
+      "image": {
+        "dimension": {
+          "width": 155,
+          "height": 179
+        }
+      }
+    }
+  ]
+}
