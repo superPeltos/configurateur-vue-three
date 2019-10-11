@@ -144,6 +144,18 @@ function init() {
     scene.add(w);
   });
 
+  // Logo
+  const logoTexture = new THREE.TextureLoader().load('src/asset/logo.png');
+  const logoMaterial = new THREE.MeshBasicMaterial({ map: logoTexture, transparent: true });
+  const logoGeometry = new THREE.PlaneGeometry(978 / 5, 250 / 5, 1);  
+  const logo = new THREE.Mesh(logoGeometry, logoMaterial);
+  const backWall = walls.filter(wall => wall.name === 'wallB')[0];
+  logo.rotation.y = Math.PI;
+  logo.position.x = backWall.position.x;
+  logo.position.y = backWall.position.y;
+  logo.position.z = backWall.position.z - 1;
+  scene.add(logo);
+
   // Object
   generateMesh(0,0);
   cubes.forEach((cube) => {
