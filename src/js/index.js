@@ -244,8 +244,8 @@ function doMouseMove(event) {
         worldNormal.copy(objectDragg.face.normal).applyMatrix3(normalMatrix).normalize();
         let newPos = intersects[0].point;
 
-        let a = Math.min(roomWidth / 2 - objectDragg.object.geometry.parameters.width / 2, Math.max(-roomWidth / 2 + objectDragg.object.geometry.parameters.width / 2, newPos.x));  // clamp coords to the range -19 to 19, so object stays on ground
-        let b = Math.min(roomWidth / 2 - objectDragg.object.geometry.parameters.width / 2, Math.max(-roomWidth / 2 + objectDragg.object.geometry.parameters.width / 2, newPos.z));
+        let a = Math.min(roomWidth / 2 - objectDragg.object.geometry.parameters.width / 2, Math.max(-roomWidth / 2 + objectDragg.object.geometry.parameters.width / 2, newPos.x));
+        let b = Math.min(roomDepth / 2 - objectDragg.object.geometry.parameters.depth / 2, Math.max(-roomDepth / 2 + objectDragg.object.geometry.parameters.depth / 2, newPos.z));
 
         objectDragg.object.position.set(a, objectDragg.object.position.y, b);
       }
