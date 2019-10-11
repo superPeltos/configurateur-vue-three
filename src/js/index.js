@@ -49,7 +49,7 @@ function init() {
   renderer.domElement.addEventListener("mouseup", doMouseUp);
 
   camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 1, 2000);
-  camera.position.set(roomWidth, roomWidth*6/7, 0);
+  camera.position.set(0, roomWidth*6/7, -roomWidth);
 
   // controls
   controls = new OrbitControls(camera, renderer.domElement);
@@ -82,7 +82,7 @@ function init() {
   console.log(floor.geometry.parameters);
   let walls = [
     {
-      name: 'wallB',
+      name: 'wallR',
       color: 0xcfdce8,
       position: {
         x: -floor.geometry.parameters.width / 2,
@@ -92,23 +92,28 @@ function init() {
       rotation: {
         y: Math.PI / 2,
       }
-    }, {
-      name: 'wallR',
+    },
+    {
+      name: 'wallB',
       color: 0xf0f8ff,
       position: {
         x: 0,
         y: geometry.parameters.height / 2,
         z: floor.geometry.parameters.width / 2,
       }
-    }, {
+    },
+    {
       name: 'wallL',
-      color: 0xf0f8ff,
+      color: 0xcfdce8,
       position: {
-        x: 0,
+        x: floor.geometry.parameters.width / 2,
         y: geometry.parameters.height / 2,
-        z: -floor.geometry.parameters.width / 2,
+        z: 0,
       },
-    }
+      rotation: {
+        y: Math.PI / 2,
+      }
+    },
   ];
 
   walls.forEach((wall) => {
@@ -253,7 +258,7 @@ function generateMesh(x,z){
     let imageName = element.ref;
     imageName = imageName.replace('.','')+'.png';
 
-    let geometry = new THREE.BoxGeometry(realDepth, realHeight, realWidth);
+    let geometry = new THREE.BoxGeometry(realWidth, realHeight, realDepth);
     let loader = new THREE.TextureLoader();
     loader.setPath("src/asset/");
     var material = new THREE.MeshBasicMaterial( { transparent:true, map: loader.load( imageName ) } );
