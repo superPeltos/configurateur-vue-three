@@ -63,7 +63,7 @@ function init() {
   let loader = new THREE.TextureLoader().load('src/asset/ground.jpg');
   loader.wrapS = THREE.RepeatWrapping;
   loader.wrapT = THREE.RepeatWrapping;
-  loader.repeat.set(16, 16);
+  loader.repeat.set(3, 3);
 
   // loader.setPath("src/asset/");
 
@@ -108,8 +108,13 @@ function init() {
     }
   ];
 
-  walls.map((wall) => {
-    material = new THREE.MeshBasicMaterial({color: wall.color, side: THREE.DoubleSide});
+  walls.forEach((wall) => {
+    let loader = new THREE.TextureLoader().load('src/asset/wall.jpeg');
+    loader.wrapS = THREE.RepeatWrapping;
+    loader.wrapT = THREE.RepeatWrapping;
+    loader.repeat.set(16, 16);
+
+    material = new THREE.MeshBasicMaterial({map: loader, side: THREE.DoubleSide});
     let w = new THREE.Mesh(geometry, material);
     w.position.x = wall.position.x;
     w.position.y = wall.position.y;
