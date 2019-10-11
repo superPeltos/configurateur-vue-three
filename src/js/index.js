@@ -49,7 +49,7 @@ function init() {
   renderer.domElement.addEventListener("mouseup", doMouseUp);
 
   camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 1, 2000);
-  camera.position.set(0, roomWidth*6/7, -roomWidth);
+  camera.position.set(0, roomWidth*6/7, roomWidth);
 
   // controls
   controls = new OrbitControls(camera, renderer.domElement);
