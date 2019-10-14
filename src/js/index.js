@@ -18,6 +18,7 @@ let mouse = new THREE.Vector2();
 let normalMatrix = new THREE.Matrix3();
 let worldNormal = new THREE.Vector3();
 let objectDragg;
+let currentIndex = -1;
 
 let camera, controls, scene, renderer;
 let mouseAction;
@@ -26,6 +27,7 @@ let raycaster;
 let intersects;
 let targetForDragging;
 let cubes = [];
+let colisions = [];
 
 init();
 //render(); // remove when using next line for animation loop (requestAnimationFrame)
@@ -221,6 +223,7 @@ function doMouseDown(event) {
     intersects = raycaster.intersectObjects(cubes);
     if (intersects.length === 0 ) return;
     objectDragg = intersects[0];
+    saveObjectDraggIndex();
   } else if (mouseAction === ADD) {
     /*console.log('coucou');
     mouse.set((event.clientX / window.innerWidth) * 2 - 1, -(event.clientY / window.innerHeight) * 2 + 1);
@@ -251,7 +254,6 @@ function doMouseMove(event) {
         raycaster.setFromCamera(mouse, camera);
         intersects = raycaster.intersectObjects(scene.children);
         if (intersects.length === 0 || !dragging) return;
-        console.log(objectDragg.object.matrixWorld);
         normalMatrix.getNormalMatrix(objectDragg.object.matrixWorld);
         worldNormal.copy(objectDragg.face.normal).applyMatrix3(normalMatrix).normalize();
         let newPos = intersects[0].point;
@@ -260,6 +262,12 @@ function doMouseMove(event) {
         let b = Math.min(roomDepth / 2 - objectDragg.object.geometry.parameters.depth / 2, Math.max(-roomDepth / 2 + objectDragg.object.geometry.parameters.depth / 2, newPos.z));
 
         objectDragg.object.position.set(a, objectDragg.object.position.y, b);
+
+        if(colision()) {
+          objectDragg.object.material.opacity = 0.25;
+        }else {
+          objectDragg.object.material.opacity = 1;
+        }
       }
 
     }
@@ -270,10 +278,67 @@ function doMouseUp() {
   objectDragg = null;
 }
 
-function generateMesh(x,z){
-  console.log(data.products);
+function colision(){
+  console.log(colisions);
+  let isColision = false;
 
-  data.products.forEach(function (element) {
+  let posX = objectDragg.object.position.x;
+  let posZ = objectDragg.object.position.z;
+
+  let width = objectDragg.object.geometry.parameters.width;
+  let depth = objectDragg.object.geometry.parameters.depth;
+  colisions[currentIndex] = [];
+
+  cubes.forEach(function (element,index) {
+    if(index !== currentIndex) {
+      let diffX = posX - element.position.x;
+      let diffZ = posZ - element.position.z;
+
+      diffX = Math.abs(diffX) - (width/2 + element.geometry.parameters.width/2);
+      diffZ = Math.abs(diffZ) - (depth/2 + element.geometry.parameters.depth/2);
+
+      if( diffX < 0 && diffZ < 0) {
+        colisions[currentIndex].push(index);
+        if(colisions[index].indexOf(currentIndex) !== -1) {
+          colisions[index].push(currentIndex);
+        }
+        isColision = true;
+        element.material.opacity = 0.25;
+      }else {
+        element.material.opacity = 1;
+      }
+    }
+  });
+
+  return isColision;
+}
+
+function saveObjectDraggIndex() {
+  let posX = objectDragg.object.position.x;
+  let posY = objectDragg.object.position.y;
+  let posZ = objectDragg.object.position.z;
+  cubes.forEach(function (element,index) {
+    if(element.position.x === posX &&element.position.y === posY &&element.position.z === posZ) {
+      currentIndex = index;
+    }
+  });
+
+
+}
+
+function generateMesh(x,z){
+
+  let lastWidth = 0;
+  let anotherLine = 0;
+  data.products.forEach(function (element,index) {
+    if(index === 3) {
+      anotherLine =1;
+      lastWidth = 0;
+    }
+    if(index === 6) {
+      anotherLine =2;
+      lastWidth = 0;
+    }
     let realHeight = element.dimension.height*roomHeight/realRoomHeight;
     let realWidth = element.dimension.width*roomWidth/realRoomWidth;
     let realDepth = element.dimension.depth*roomDepth/realRoomDepth;
@@ -286,9 +351,11 @@ function generateMesh(x,z){
     loader.setPath("src/asset/");
     var material = new THREE.MeshBasicMaterial( { transparent:true, map: loader.load( imageName ) } );
     let mesh = new THREE.Mesh(geometry, material);
-    mesh.position.x = 0;
+    mesh.position.x = - roomWidth/2 + realWidth/2 + lastWidth ;
     mesh.position.y = mesh.geometry.parameters.height / 2;
-    mesh.position.z = 0;
+    mesh.position.z = -roomDepth/2+ + realDepth/2 + anotherLine*2*roomDepth/5;
+    colisions.push([]);
     cubes.push(mesh);
+    lastWidth += realWidth+50;
   });
 }
